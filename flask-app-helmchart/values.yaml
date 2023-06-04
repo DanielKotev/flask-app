@@ -1,0 +1,11 @@
+deployment:
+  name: "flask"
+  image: 699509601278.dkr.ecr.eu-central-1.amazonaws.com/flask
+  tag: latest
+  port: 5000
+  replicas: 2
+  env: "dev"
+  domain: "daguaniko.com"
+
+service:
+  port: 80

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "ingress"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: acme-issuer
+spec:
+  rules:
+    - host: "daguaniko.com"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "{{ .Values.deployment.name }}-svc"
+                port:
+                  number: {{ .Values.deployment.port }}
+  tls:
+    - hosts:
+        - daguaniko.com
+      secretName: myingress-cert

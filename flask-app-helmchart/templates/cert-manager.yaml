@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: acme-issuer
+spec:
+  acme:
+    email: danielkotev@gmail.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: private-key
+    solvers:
+    - selector:
+        dnsZones:
+          - "daguaniko.com"
+          - "www.daguaniko.com"
+      dns01:
+        route53:
+          region: eu-central-1
