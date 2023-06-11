@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+IMAGE_NAME="699509601278.dkr.ecr.eu-central-1.amazonaws.com/flask"
+#LOGIN
+aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 699509601278.dkr.ecr.eu-central-1.amazonaws.com
+
+#BUILD
+docker build -t "$IMAGE_NAME:$GIT_COMMIT" .
+
+#TEST
+docker run -dit -p 5000:5000 $(docker image ls | grep -iv repo | head -1 | awk '{print $3}')
+sleep 10
+curl http://localhost:5000 || docker stop $(docker ps -a -q)
+exit_status=$?
+if [[ $exit_status == 0 ]]
+then echo "Succ test" &&  docker stop $(docker ps -a -q)
+else echo "FAIL test" && docker stop $(docker ps -a -q) && exit 1
+fi
+
+#PUSH
+docker push "$IMAGE_NAME:$GIT_COMMIT"
+
+helm upgrade flaskapp helm/ --install --wait --atomic --set deployment.tag=$GIT_COMMIT
