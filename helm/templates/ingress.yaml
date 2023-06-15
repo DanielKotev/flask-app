@@ -7,7 +7,11 @@ metadata:
     cert-manager.io/cluster-issuer: acme-issuer
 spec:
   rules:
+      {{- if eq .Values.deployment.env "prod" }}
     - host: "daguaniko.com"
+      {{- else }}
+    - host: "{{.Values.deployment.env}}.daguaniko.com"
+      {{ end }}
       http:
         paths:
           - path: /
@@ -18,6 +22,10 @@ spec:
                 port:
                   number: {{ .Values.deployment.port }}
   tls:
-    - hosts:
-        - daguaniko.com
-      secretName: myingress-cert
+  - hosts:
+    {{- if eq .Values.deployment.env "prod" }}
+    - "daguaniko.com"
+    {{- else }}
+    - "{{ .Values.deployment.env }}.daguaniko.com"
+    {{ end }}
+    secretName: myingress-cert
