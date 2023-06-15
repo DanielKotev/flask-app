@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 env=os.getenv("ENV")
 @app.route("/") 
-def home(): return "שלום מדניאל וואירה" 
+def home(): return "Hello Nick" 
 
 @app.route("/picture") 
 def pic():
