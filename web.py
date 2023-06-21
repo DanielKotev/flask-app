@@ -7,19 +7,21 @@ import json
 
 app = Flask(__name__)
 env = os.getenv("ENV")
+
+
 def get_env_secret():
     client = boto3.client('secretsmanager')
+    kms = boto3.client('kms', region_name='eu-central-1')
     response = client.get_secret_value(
         SecretId='password'
     )
     env_password = json.loads(response['SecretString'])
     if env == 'prod':
-        return(env_password['env_prod'])
+        return (env_password['env_prod'])
     if env == 'stage':
-        return(env_password['env_stage'])
+        return (env_password['env_stage'])
     if env == 'dev':
-        return(env_password['env_dev'])
-
+        return (env_password['env_dev'])
 
 
 @app.route("/env")
