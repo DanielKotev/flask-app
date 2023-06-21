@@ -7,6 +7,10 @@ import json
 
 app = Flask(__name__)
 env = os.getenv("ENV")
+os.environ['AWS_DEFAULT_REGION'] = 'eu-central-1'
+session = boto3.Session(
+    region_name='eu-central-1'
+)
 
 
 def get_env_secret():
