@@ -58,7 +58,7 @@ resource "helm_release" "external_dns" {
   }
   set {
     name  = "domainFilters"
-    value = "daguaniko.com"
+    value = var.url
   }
   set {
     name  = "provider"

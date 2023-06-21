@@ -58,18 +58,23 @@ module "eks" {
       labels = {
         role = "general"
       }
-      instance_type = ["t2.large"]
+      instance_type = ["t2.micro"]
       capacity_type = "ON_DEMAND"
     }
   }
   cluster_endpoint_public_access = true
-  manage_aws_auth_configmap      = false
+  manage_aws_auth_configmap      = true
   aws_auth_roles = [
     {
       rolearn  = "arn:aws:iam::699509601278:role/admin"
       username = "dynamoDBTemp"
       groups   = ["system:masters"]
     },
+    {
+      rolearn  = aws_iam_role.role.arn
+      username = "${local.name}-role"
+      groups   = ["system:masters"]
+    }
   ]
   aws_auth_accounts = [
     data.aws_caller_identity.current.account_id
@@ -118,6 +123,38 @@ module "external_dns_irsa_role" {
   }
 }
 
+/* resource "helm_release" "prometheus_grafana" {
+  depends_on = [module.eks]
+  name       = "prometheus"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart      = "kube-prometheus-stack"
+  version    = "46.6.0"
+  atomic     = true
+  wait       = true
+  namespace  = "kube-system"
+} */
+
+/* resource "helm_release" "loki" {
+  depends_on = [module.eks]
+  name       = "grafana-loki"
+  repository = "https://grafana.github.io/helm-charts"
+  chart      = "loki"
+  version    = "5.6.1"
+  atomic     = true
+  wait       = true
+  namespace  = "kube-system"
+}
+
+resource "helm_release" "promtail" {
+  depends_on = [module.eks]
+  name       = "promtail"
+  repository = "https://grafana.github.io/helm-charts"
+  chart      = "promtail"
+  version    = "6.11.2"
+  atomic     = true
+  wait       = true
+  namespace  = "kube-system"
+} */
 
 
 
