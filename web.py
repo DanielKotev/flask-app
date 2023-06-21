@@ -14,11 +14,12 @@ def get_env_secret():
     )
     env_password = json.loads(response['SecretString'])
     if env == 'prod':
-        print(env_password['env_prod'])
+        return(env_password['env_prod'])
     if env == 'stage':
-        print(env_password['env_stage'])
+        return(env_password['env_stage'])
     if env == 'dev':
-        print(env_password['env_dev'])
+        return(env_password['env_dev'])
+
 
 
 @app.route("/env")
