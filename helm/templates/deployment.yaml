@@ -23,3 +23,6 @@ spec:
           envFrom:
               - configMapRef:
                     name: "{{ .Values.deployment.name }}-config"
+          env:
+            - name: "flask_env"
+              value: "{{.Values.deployment.env}}-password"
