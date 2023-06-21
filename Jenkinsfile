@@ -1,6 +1,5 @@
 def Deploy(DeployEnv) {
     sh """
-    aws eks update-kubeconfig --name flask-cluster --region eu-central-1
     source ../../assume_role.sh
     helm upgrade flask helm/ --atomic --wait --install --namespace "$DeployEnv" --create-namespace --set deployment.tag="$GIT_COMMIT" --set deployment.env="$DeployEnv"
     """
