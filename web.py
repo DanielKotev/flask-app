@@ -2,34 +2,20 @@
 from flask import Flask
 from flask import render_template
 import os
-import boto3
-import json
 
 app = Flask(__name__)
 env = os.getenv("ENV")
-os.environ['AWS_DEFAULT_REGION'] = 'eu-central-1'
-session = boto3.Session(
-    region_name='eu-central-1'
-)
+flask_env = os.getenv("flask")
 
+def get_env_password():
+    with open(f'/app/secrets/myapp/{env}', 'r') as f:
+        password = f.read()
+        return(password)
 
-def get_env_secret():
-    client = boto3.client('secretsmanager')
-    kms = boto3.client('kms', region_name='eu-central-1')
-    response = client.get_secret_value(
-        SecretId='password'
-    )
-    env_password = json.loads(response['SecretString'])
-    if env == 'prod':
-        return (env_password['env_prod'])
-    if env == 'stage':
-        return (env_password['env_stage'])
-    if env == 'dev':
-        return (env_password['env_dev'])
 
 
 @app.route("/env")
-def home(): return f"This is {env} and the password is {get_env_secret()}"
+def home(): return f"This is {env} and the password is {get_env_password()},{flask_env}"
 
 
 @app.route("/picture")

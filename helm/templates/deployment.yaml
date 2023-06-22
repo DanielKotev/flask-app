@@ -23,6 +23,17 @@ spec:
           envFrom:
               - configMapRef:
                     name: "{{ .Values.deployment.name }}-config"
+          volumeMounts:
+            - name: secrets
+              mountPath: "/app/secrets"
+              readOnly: true 
           env:
-            - name: "flask_env"
-              value: "{{.Values.deployment.env}}-password"
+            - name: {{ .Values.deployment.name }}
+              value: myapp/stage              
+      volumes:
+        - name: secrets
+          secret:
+            secretName: env
+            items:
+            - key: flask
+              path: myapp/stage
