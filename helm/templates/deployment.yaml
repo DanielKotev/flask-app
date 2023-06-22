@@ -29,11 +29,11 @@ spec:
               readOnly: true 
           env:
             - name: {{ .Values.deployment.name }}
-              value: myapp/{{ .Values.deployment.name }}              
+              value: myapp/{{ .Values.deployment.env }}              
       volumes:
         - name: secrets
           secret:
             secretName: env
             items:
             - key: flask
-              path: myapp/{{ .Values.deployment.name }}
+              path: myapp/{{ .Values.deployment.env }}
