@@ -6,12 +6,11 @@ import os
 app = Flask(__name__)
 env = os.getenv("ENV")
 
+
 def get_env_password():
     with open(f'/app/secrets/myapp/{env}', 'r') as f:
         password = f.read()
         return(password)
-
-
 
 @app.route("/env")
 def home(): return f"This is {env} and the password is {get_env_password()}"
