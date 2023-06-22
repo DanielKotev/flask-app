@@ -1,21 +1,30 @@
 #!/usr/bin/python 
-from flask import Flask 
-from flask import render_template 
-import os 
+from flask import Flask
+from flask import render_template
+import os
 
-app = Flask(__name__) 
+app = Flask(__name__)
+env = os.getenv("ENV")
 
-env=os.getenv("ENV")
-@app.route("/") 
-def home(): return f"Hello Nick, Its {env} enviroment" 
 
-@app.route("/picture") 
+def get_env_password():
+    with open(f'/app/secrets/myapp/{env}', 'r') as f:
+        password = f.read()
+        return(password)
+
+@app.route("/env")
+def home(): return f"This is {env} and the password is {get_env_password()}"
+
+
+@app.route("/picture")
 def pic():
-    return render_template('index.html') 
+    return render_template('index.html')
 
-@app.route("/pragmatic") 
-def salvador(): 
-    return f"hello from {env}" 
 
-if __name__ == "__main__": 
-    app.run(host='0.0.0.0',debug=True)
+@app.route("/pragmatic")
+def salvador():
+    return f"hello from {env}"
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', debug=True)
