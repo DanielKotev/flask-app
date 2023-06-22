@@ -5,7 +5,6 @@ import os
 
 app = Flask(__name__)
 env = os.getenv("ENV")
-flask_env = os.getenv("flask")
 
 def get_env_password():
     with open(f'/app/secrets/myapp/{env}', 'r') as f:
@@ -15,7 +14,7 @@ def get_env_password():
 
 
 @app.route("/env")
-def home(): return f"This is {env} and the password is {get_env_password()},{flask_env}"
+def home(): return f"This is {env} and the password is {get_env_password()}"
 
 
 @app.route("/picture")
